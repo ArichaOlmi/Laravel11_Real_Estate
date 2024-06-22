@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use PharIo\Manifest\Author;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,9 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[\App\Http\Controllers\Frontend\HomepageController::class, 'index'])->name('home');
+Route::get('/about',[\App\Http\Controllers\Frontend\AboutController::class, 'index'])->name('about');
+Route::get('/property',[\App\Http\Controllers\Frontend\PropertyController::class, 'index'])->name('property');
+Route::get('/property/{slug}',[\App\Http\Controllers\Frontend\PropertyController::class, 'show'])->name('property.show');
+Route::get('/contact',[\App\Http\Controllers\Frontend\ContactController::class, 'index'])->name('contact');
 
 Auth::routes();
 
@@ -28,4 +32,6 @@ Route::group(['middleware' => 'isAdmin','prefix' => 'admin', 'as' => 'admin.'], 
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class)->except('show');
+    Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class)->except('show');
 });
